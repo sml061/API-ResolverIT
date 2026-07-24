@@ -3,3 +3,6 @@ node_modules/
 
 # Ignore JSON Files
 *.json
+
+# Env File
+*.env
