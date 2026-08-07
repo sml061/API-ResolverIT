@@ -5,14 +5,8 @@ import { log } from "./Config/log.js";
 import { CheckIsAdmin } from "./mySql/CheckIsAdmin.js";
 import { LoadCallsMain } from "./LoadCalls/LoadCalls.js";
 import { LoadCallDetailsMain } from "./LoadCalls/once.js";
+import { AssumirChamado } from "./src/AssumirTecnicoAoChamado.js";
 
-// import https from "https";
-// import fs from "fs";
-
-// const options = {
-//     key: fs.readFileSync("server.key"),
-//     cert: fs.readFileSync("server.cert")
-// };
 
 const app = express();
 
@@ -52,6 +46,21 @@ app.get("/DetalhesCall/:id", async (req, res) => {
 
     res.json(dados);
 });
+
+app.post("/AssumirTecnicoAoChamado", (req, res) => {
+    const { idChamado, Responsavel } = req.body;
+
+    AssumirChamado(idChamado, Responsavel);
+
+    res.json({
+        sucesso: true,
+        mesnagem: "Responsavel atribuido"
+    });
+})
+
+app.get("/VerificarSeChamadoJaEstaAssumido/:id". (req, res) => {
+    VerificarSeChamadoJaEstaAssumido()
+})
 
 app.listen(3000, "0.0.0.0", () => {
     log("System", "Servidor iniciado");
