@@ -8,6 +8,11 @@ import { LoadCallDetailsMain } from "./LoadCalls/once.js";
 import { AssumirChamado } from "./src/AssumirTecnicoAoChamado.js";
 import { VerificarSeChamadoJaEstaAssumido } from "./src/VerificarSeChamadoJaEstaAssumido.js";
 import { DesassumirTecnicoAoChamado } from "./src/DesassumirTecnicoAoChamado.js";
+import https from "https";
+import fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
@@ -20,6 +25,10 @@ app.use(
 );
 app.use(express.json());
 app.use(express.static("public"));
+
+app.get('/', (req, res) => {
+  res.send('Servidor HTTPS rodando com segurança!');
+});
 
 app.post("/CriarCall", (req, res) => {
     const { Tipo, ObsInput, Mensagem, Usuario } = req.body;
@@ -101,7 +110,18 @@ app.post("/DesassumirTecnicoAoChamado", async (req, res) => {
         });
     }
 });
+// Configuração do servidor HTTPS
+const options = {
+    key: fs.readFileSync(process.env.KEY_PATH),
+    cert: fs.readFileSync(process.env.CERTIFICADO_PATH),
+};
 
-app.listen(3000, "0.0.0.0", () => {
-    log("System", "Servidor iniciado");
+https.createServer(options, app).listen(3000, "0.0.0.0", () => {
+    console.log("Servidor HTTPS rodando na porta 3000");
 });
+
+// Configuração do servidor HTTP (opcional, se você quiser redirecionar para HTTPS)
+
+// app.listen(3000, "0.0.0.0", () => {
+//     log("System", "Servidor iniciado");
+// });
